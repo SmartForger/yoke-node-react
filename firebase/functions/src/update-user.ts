@@ -1,30 +1,32 @@
 import * as functions from "firebase-functions";
 import { getFirestore } from 'firebase-admin/firestore';
 import { getUserFromDb, handleError } from "./helpers";
+import * as joi from 'joi';
 
-export const addUser = functions.https.onRequest(async (request, response) => {
+const requestSchema = joi.object({
+  id: joi.string().required(),
+  name: joi.string(),
+  email: joi.string(),
+  balance: joi.number().positive(),
+});
+
+
+export const updateUser = functions.https.onRequest(async (request, response) => {
   try {
-    const { id } = request.body;
-
-    if (!id) {
-      throw {
-        status: 400,
-        message: 'id is required',
-      };
-    }
+    const userObj = await requestSchema.validateAsync(request.body);
 
     const db = getFirestore();
 
-    const user = await getUserFromDb(db, id);
+    const user = await getUserFromDb(db, userObj.id);
 
-    await db.collection('users').doc(id).set({
+    await db.collection('users').doc(userObj.id).set({
       ...user,
-      ...request.body,
+      ...userObj,
     });
 
     response.json({
       ...user,
-      ...request.body,
+      ...userObj,
     });
   } catch (err) {
     handleError(response, err);
