@@ -15,8 +15,15 @@ export const Home = () => {
   const purchase = async (productId: string) => {
     setLoading(true);
 
-    await api.purchase(user?.id || "", productId, 1);
-    await getProducts();
+    try {
+      await api.purchase(user?.id || "", productId, 1);
+      await getProducts();
+    } catch (err) {
+      const errObj = err as any;
+      if (errObj.response?.data?.message) {
+        alert(errObj.response?.data?.message);
+      }
+    }
 
     setLoading(false);
   };
