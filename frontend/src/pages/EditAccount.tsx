@@ -46,7 +46,7 @@ export const EditAccount = () => {
 
   return (
     <div className="EditAccount">
-      <h3>Update Account</h3>
+      <h3>{user ? "Update Account" : "Create Account"}</h3>
       <Formik
         initialValues={intialValues}
         validationSchema={AccountSchema}

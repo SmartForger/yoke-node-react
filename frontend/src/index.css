@@ -124,3 +124,13 @@ code {
   display: flex;
   align-items: center;
 }
+
+.receipts-table {
+  border-collapse: collapse;
+}
+
+.receipts-table td,
+.receipts-table th {
+  border: 1px solid #888;
+  padding: 5px 10px;
+}

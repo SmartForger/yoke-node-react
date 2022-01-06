@@ -12,12 +12,13 @@ export const Home = () => {
     setProducts(await api.getProdcuts());
   }, []);
 
-  const purchase = async (productId: string) => {
+  const purchase = async (product: Product) => {
     setLoading(true);
 
     try {
-      await api.purchase(user?.id || "", productId, 1);
+      await api.purchase(user?.id || "", product.id, 1);
       await getProducts();
+      alert(`Successfully purchased ${product.name}`)
     } catch (err) {
       const errObj = err as any;
       if (errObj.response?.data?.message) {
@@ -51,7 +52,7 @@ export const Home = () => {
               {product.quantiyInStock > 0 && (
                 <button
                   className="button"
-                  onClick={() => purchase(product.id)}
+                  onClick={() => purchase(product)}
                   disabled={loading}
                 >
                   Purchase
