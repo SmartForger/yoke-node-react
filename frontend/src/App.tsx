@@ -4,6 +4,7 @@ import {
   Route,
   NavLink,
 } from "react-router-dom";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 import { Account } from "./pages/Account";
 import { EditAccount } from "./pages/EditAccount";
 import { Home } from "./pages/Home";
@@ -27,8 +28,10 @@ function App() {
       </div>
 
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/account" element={<Account />} />
+        <Route path="/" element={<ProtectedRoute />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/account" element={<Account />} />
+        </Route>
         <Route path="/account/edit" element={<EditAccount />} />
       </Routes>
     </Router>
