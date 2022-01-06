@@ -2,8 +2,9 @@ import * as functions from "firebase-functions";
 import { getFirestore } from 'firebase-admin/firestore';
 import { Receipt } from "./types/Receipt";
 import { getUserFromDb, handleError } from "./helpers";
+import cors from './helpers/cors';
 
-export const getUser = functions.https.onRequest(async (request, response) => {
+const handleRequest = async (request: functions.https.Request, response: functions.Response) => {
   try {
     const db = getFirestore();
     const { id } = request.query;
@@ -30,4 +31,6 @@ export const getUser = functions.https.onRequest(async (request, response) => {
   } catch (err) {
     handleError(response, err);
   }
-});
+}
+
+export const getUser = cors(handleRequest);

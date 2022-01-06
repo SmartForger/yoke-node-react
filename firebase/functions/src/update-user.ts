@@ -2,6 +2,7 @@ import * as functions from "firebase-functions";
 import { getFirestore } from 'firebase-admin/firestore';
 import { getUserFromDb, handleError } from "./helpers";
 import * as joi from 'joi';
+import cors from "./helpers/cors";
 
 const requestSchema = joi.object({
   id: joi.string().required(),
@@ -10,8 +11,7 @@ const requestSchema = joi.object({
   balance: joi.number().positive(),
 });
 
-
-export const updateUser = functions.https.onRequest(async (request, response) => {
+const handleRequest = async (request: functions.https.Request, response: functions.Response) => {
   try {
     const userObj = await requestSchema.validateAsync(request.body);
 
@@ -31,4 +31,6 @@ export const updateUser = functions.https.onRequest(async (request, response) =>
   } catch (err) {
     handleError(response, err);
   }
-});
+};
+
+export const updateUser = cors(handleRequest);

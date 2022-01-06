@@ -2,8 +2,9 @@ import * as functions from "firebase-functions";
 import { getFirestore } from 'firebase-admin/firestore';
 import { Product } from "./types/Product";
 import { handleError } from "./helpers";
+import cors from './helpers/cors'
 
-export const listProducts = functions.https.onRequest(async (request, response) => {
+const handleRequest = async (request: functions.https.Request, response: functions.Response) => {
   try {
     const db = getFirestore();
     const snapshot = await db.collection('products').get();
@@ -17,4 +18,6 @@ export const listProducts = functions.https.onRequest(async (request, response) 
   } catch (err) {
     handleError(response, err);
   }
-});
+}
+
+export const listProducts = cors(handleRequest);

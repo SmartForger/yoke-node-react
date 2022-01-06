@@ -5,8 +5,9 @@ import { v4 as uuid } from 'uuid';
 import { Receipt } from "./types/Receipt";
 import { Product } from "./types/Product";
 import { getUserFromDb, handleError } from "./helpers";
+import cors from "./helpers/cors";
 
-export const purchase = functions.https.onRequest(async (request, response) => {
+const handleRequest = async (request: functions.https.Request, response: functions.Response) => {
   try {
     const db = getFirestore();
     const { productId, userId, quantity } = request.body;
@@ -83,4 +84,7 @@ export const purchase = functions.https.onRequest(async (request, response) => {
   } catch (err) {
     handleError(response, err);
   }
-});
+}
+
+
+export const purchase = cors(handleRequest);

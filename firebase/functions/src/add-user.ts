@@ -3,7 +3,7 @@ import { v4 as uuid } from 'uuid';
 import { getFirestore } from 'firebase-admin/firestore';
 import { handleError } from "./helpers";
 import * as joi from 'joi';
-import * as cors from 'cors';
+import cors from './helpers/cors';
 
 const requestSchema = joi.object({
   name: joi.string().required(),
@@ -33,8 +33,4 @@ const handleRequest = async (request: functions.https.Request, response: functio
   }
 };
 
-export const addUser = functions.https.onRequest((request, response) => {
-  return cors()(request, response, async () => {
-    await handleRequest(request, response);
-  });
-});
+export const addUser = cors(handleRequest);
