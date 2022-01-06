@@ -25,3 +25,62 @@ code {
   color: #fff;
   text-decoration: none;
 }
+
+.EditAccount {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.EditAccount h3 {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.edit-account-form {
+  min-width: 400px;
+}
+
+.control {
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.control label {
+  display: inline-block;
+  width: 100px;
+  flex: none;
+}
+
+.control input {
+  width: 100%;
+}
+
+.button {
+  background-color: #fff;
+  border: 1px solid #888;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: #eee;
+}
+
+.field-error {
+  color: red;
+  font-size: 14px;
+  margin-left: 100px;
+  margin-top: -10px;
+  margin-bottom: 10px;
+}
+
+.actions {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.actions .button {
+  margin: 0 5px;
+}
