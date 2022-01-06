@@ -1,9 +1,14 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../hooks/useUser";
 
 export const Account = () => {
-  const user = useUser();
+  const { user, refreshUser } = useUser();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    refreshUser();
+  }, [refreshUser]);
 
   return (
     <div className="Account">

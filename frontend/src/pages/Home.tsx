@@ -5,7 +5,7 @@ import { Product } from "../types/Product";
 
 export const Home = () => {
   const [products, setProducts] = useState<Product[]>([]);
-  const user = useUser();
+  const { user } = useUser();
   const [loading, setLoading] = useState(false);
 
   const getProducts = useCallback(async () => {

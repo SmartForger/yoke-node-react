@@ -1,4 +1,5 @@
 import { User } from "../types/User";
+import api from "./api";
 
 export class AccountService {
   private user: User | null;
@@ -6,6 +7,7 @@ export class AccountService {
   constructor() {
     try {
       this.user = JSON.parse(localStorage.getItem('user') || '') as any;
+      this.refreshUser();
     } catch {
       this.user = null;
     }
@@ -15,12 +17,15 @@ export class AccountService {
     return this.user;
   }
 
+  async refreshUser() {
+    if (this.user?.id) {
+      this.user = await api.getUser(this.user?.id);
+    }
+  }
+
   setUser(user: User) {
     this.user = user;
-
-    const newUser = { ...user };
-    delete newUser.receipts;
-    localStorage.setItem('user', JSON.stringify(newUser));
+    localStorage.setItem('user', JSON.stringify({ id: user.id }));
   }
 }
 

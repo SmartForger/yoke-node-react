@@ -1,10 +1,4 @@
-import {
-  Formik,
-  Form,
-  Field,
-  ErrorMessage,
-  FormikHelpers,
-} from "formik";
+import { Formik, Form, Field, ErrorMessage, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import { useMemo } from "react";
 import api from "../services/api";
@@ -20,7 +14,7 @@ const AccountSchema = Yup.object().shape({
 });
 
 export const EditAccount = () => {
-  const user = useUser();
+  const { user } = useUser();
   const navigate = useNavigate();
 
   const intialValues = useMemo(() => {
@@ -28,7 +22,7 @@ export const EditAccount = () => {
       user || {
         name: "",
         email: "",
-        balance: 0,
+        balance: "",
       }
     );
   }, [user]);
@@ -38,7 +32,11 @@ export const EditAccount = () => {
     { setSubmitting }: FormikHelpers<any>
   ) => {
     setSubmitting(true);
-    await api.addUser(values);
+    if (!values.id) {
+      await api.addUser(values);
+    } else {
+      await api.updateUser(values);
+    }
     navigate("/account");
   };
 
