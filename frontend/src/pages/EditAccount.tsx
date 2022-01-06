@@ -26,7 +26,7 @@ export const EditAccount = () => {
           }, 400);
         }}
       >
-        {({ isSubmitting }) => (
+        {({ isSubmitting, isValid }) => (
           <Form className="edit-account-form">
             <div className="control">
               <label htmlFor="name">Name:</label>
@@ -57,7 +57,7 @@ export const EditAccount = () => {
               component="div"
             />
             <div className="actions">
-              <button className="button" type="submit" disabled={isSubmitting}>
+              <button className="button" type="submit" disabled={isSubmitting || !isValid}>
                 Update
               </button>
               {user && (
