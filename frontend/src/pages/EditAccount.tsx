@@ -35,7 +35,8 @@ export const EditAccount = () => {
     if (!values.id) {
       await api.addUser(values);
     } else {
-      await api.updateUser(values);
+      const { receipts, ...updateInfo } = values;
+      await api.updateUser(updateInfo);
     }
     navigate("/account");
   };
