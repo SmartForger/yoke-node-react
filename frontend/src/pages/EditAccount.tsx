@@ -1,6 +1,15 @@
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import account from "../services/account";
+import {
+  Formik,
+  Form,
+  Field,
+  ErrorMessage,
+  FormikHelpers,
+} from "formik";
 import * as Yup from "yup";
+import { useMemo } from "react";
+import api from "../services/api";
+import { useNavigate } from "react-router-dom";
+import { useUser } from "../hooks/useUser";
 
 const AccountSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
@@ -11,20 +20,39 @@ const AccountSchema = Yup.object().shape({
 });
 
 export const EditAccount = () => {
-  const user = account.getUser();
+  const user = useUser();
+  const navigate = useNavigate();
+
+  const intialValues = useMemo(() => {
+    return (
+      user || {
+        name: "",
+        email: "",
+        balance: 0,
+      }
+    );
+  }, [user]);
+
+  const handleSubmit = async (
+    values: any,
+    { setSubmitting }: FormikHelpers<any>
+  ) => {
+    setSubmitting(true);
+    await api.addUser(values);
+    navigate("/account");
+  };
+
+  const handleCancel = () => {
+    navigate("/account");
+  };
 
   return (
     <div className="EditAccount">
       <h3>Update Account</h3>
       <Formik
-        initialValues={{ email: "", password: "" }}
+        initialValues={intialValues}
         validationSchema={AccountSchema}
-        onSubmit={(values, { setSubmitting }) => {
-          setTimeout(() => {
-            alert(JSON.stringify(values, null, 2));
-            setSubmitting(false);
-          }, 400);
-        }}
+        onSubmit={handleSubmit}
       >
         {({ isSubmitting, isValid }) => (
           <Form className="edit-account-form">
@@ -57,11 +85,19 @@ export const EditAccount = () => {
               component="div"
             />
             <div className="actions">
-              <button className="button" type="submit" disabled={isSubmitting || !isValid}>
-                Update
+              <button
+                className="button"
+                type="submit"
+                disabled={isSubmitting || !isValid}
+              >
+                {user ? "Update" : "Create"}
               </button>
               {user && (
-                <button className="button" disabled={isSubmitting}>
+                <button
+                  className="button"
+                  disabled={isSubmitting}
+                  onClick={handleCancel}
+                >
                   Cancel
                 </button>
               )}

@@ -3,6 +3,7 @@ import { v4 as uuid } from 'uuid';
 import { getFirestore } from 'firebase-admin/firestore';
 import { handleError } from "./helpers";
 import * as joi from 'joi';
+import * as cors from 'cors';
 
 const requestSchema = joi.object({
   name: joi.string().required(),
@@ -10,7 +11,7 @@ const requestSchema = joi.object({
   balance: joi.number().positive().required()
 });
 
-export const addUser = functions.https.onRequest(async (request, response) => {
+const handleRequest = async (request: functions.https.Request, response: functions.Response) => {
   try {
     const userObj = await requestSchema.validateAsync(request.body);
 
@@ -30,4 +31,10 @@ export const addUser = functions.https.onRequest(async (request, response) => {
   } catch (err) {
     handleError(response, err);
   }
+};
+
+export const addUser = functions.https.onRequest((request, response) => {
+  return cors()(request, response, async () => {
+    await handleRequest(request, response);
+  });
 });
